@@ -45,15 +45,17 @@ COPY = {
             ("fx_lotus", "Lịch âm", "Rằm và mùng 1 công đức x2, Tết x3. Ngày âm hiện ngay trên màn chính."),
             ("item_xinxam", "540 câu phán", "Hôm nay hợp ăn bún đậu, kỵ mở Excel. Có gói Dev, Thất tình, Thi cử, Tết và quẻ hiếm."),
             ("mascot_chant", "Niệm & hẹn giờ", "Giữ nút Niệm để tự gõ, hoặc hẹn giờ tụng 1, 5, 15 phút, có Live Activity."),
-            ("item_incense", "Widget gõ ngoài màn hình", "Gõ mõ ngay trên màn hình chính, mở app là công đức vào sổ."),
+            ("item_incense", "Tiếng thật, chạy nhẹ", "Tiếng mõ, chuông, phím cơ đều là bản thu thật. Gõ 15 cú mỗi giây vẫn mượt, pin vẫn khoẻ."),
         ],
         "shop_title": "Chùa Shop", "shop_sub": "Mua bằng công đức, không bằng tiền.",
         "skins": [("wood", "Mõ gỗ"), ("bamboo", "Mõ tre"), ("red", "Mõ đỏ may mắn"), ("pixel", "Mõ 8-bit"), ("noel", "Mõ Noel"),
                   ("banhchung", "Mõ bánh chưng"), ("jade", "Mõ ngọc bích"), ("rgb", "Mõ RGB gaming"), ("gold", "Mõ vàng ròng"),
                   ("diamond", "Mõ kim cương")],
         "share_title": "Khoe công đức", "share_sub": "Mỗi ngày một tấm sổ công đức, câu phán, danh hiệu, tổng kết năm. Story 9:16 hoặc vuông 1:1.",
+        "widgets_title": "Gõ ngay trên màn hình chính",
+        "widgets_sub": "Widget có nút Gõ, công đức hôm nay, vòng mục tiêu trên màn hình khoá, và câu phán mới mỗi sáng.",
         "shots_title": "Trong app",
-        "shots": [("home_vi", "Gõ mõ"), ("11_shop", "Chùa Shop"), ("03_ledger", "Sổ và nhiệm vụ"), ("14_quotes", "Kinh thư"), ("02_goal", "Đủ mục tiêu")],
+        "shots": [("home", "Gõ mõ"), ("shop", "Chùa Shop"), ("ledger", "Sổ và nhiệm vụ"), ("badges", "Thành tựu"), ("stats", "Thống kê"), ("share", "Chia sẻ")],
         "promise_title": "Lời hứa của chùa",
         "promise_sub": "Không gì rời khỏi máy bạn. Không bán gì cho bạn.",
         "promise": ["Miễn phí mãi mãi", "Không mua trong app", "Không quảng cáo", "Không theo dõi", "Không tài khoản", "Dữ liệu chỉ trên máy"],
@@ -90,14 +92,16 @@ COPY = {
             ("fx_lotus", "Lunar calendar", "Full and new moon days pay x2, Tết x3. The lunar date sits on the home screen."),
             ("item_xinxam", "540 oracles", "Today favors noodles; avoid Excel. Packs for devs, heartbreak, exams, Tết, plus rare fortunes."),
             ("mascot_chant", "Chant & timer", "Hold Chant to tap for you, or set a 1, 5 or 15 minute chant with a Live Activity."),
-            ("item_incense", "Tap from the home screen", "An interactive widget; the merit lands in your ledger next time you open the app."),
+            ("item_incense", "Real sounds, light on battery", "Recorded wooden fish, bowl and key sounds. Smooth at 15 taps a second."),
         ],
         "shop_title": "The temple shop", "shop_sub": "Paid in merit, never in money.",
         "skins": [("wood", "Wooden fish"), ("bamboo", "Bamboo"), ("red", "Lucky red"), ("pixel", "8-bit"), ("noel", "Santa"),
                   ("banhchung", "Bánh chưng"), ("jade", "Jade"), ("rgb", "RGB gaming"), ("gold", "Solid gold"), ("diamond", "Diamond")],
         "share_title": "Show off your merit", "share_sub": "A daily merit ledger, oracles, ranks and a year in review, as 9:16 stories or 1:1 squares.",
+        "widgets_title": "Tap right from your home screen",
+        "widgets_sub": "A widget with a Tap button, today's merit, a goal ring on the lock screen, and a fresh oracle every morning.",
         "shots_title": "Inside the app",
-        "shots": [("home_en", "Tapping"), ("11_shop", "Temple shop"), ("03_ledger", "Ledger and quests"), ("14_quotes", "Oracle collection"), ("02_goal", "Goal reached")],
+        "shots": [("home", "Tapping"), ("shop", "Temple shop"), ("ledger", "Ledger and quests"), ("badges", "Badges"), ("stats", "Stats"), ("share", "Sharing")],
         "promise_title": "The temple's promise",
         "promise_sub": "Nothing leaves your phone. Nothing is for sale.",
         "promise": ["Free forever", "No in-app purchases", "No ads", "No tracking", "No account", "Data stays on device"],
@@ -181,7 +185,14 @@ def landing(c):
     skins = "".join(f"""<figure><img src="{prefix}assets/img/mo_{k}.webp" alt="{e(n)}" loading="lazy"><figcaption>{e(n)}</figcaption></figure>"""
                     for k, n in c["skins"])
     cards = "".join(f'<img src="{prefix}assets/cards/{k}_{c["lang"]}.webp" alt="" loading="lazy">' for k in ["day", "quote", "rank", "ach", "year"])
-    shots = "".join(f'<img src="{prefix}assets/shots/{k}.webp" alt="{e(n)}" loading="lazy">' for k, n in c["shots"])
+    shots = "".join(f'<img src="{prefix}assets/shots/{c["lang"]}-{k}.webp" alt="{e(n)}" loading="lazy">' for k, n in c["shots"])
+    lang = c["lang"]
+    widgets = (f'<div class="widgets">'
+               f'<img class="w-small" src="{prefix}assets/widgets/{lang}-merit_small.webp" alt="" loading="lazy">'
+               f'<img class="w-small" src="{prefix}assets/widgets/{lang}-tap_small.webp" alt="" loading="lazy">'
+               f'<img class="w-large" src="{prefix}assets/widgets/{lang}-oracle_large.webp" alt="" loading="lazy">'
+               f'<img class="w-medium" src="{prefix}assets/widgets/{lang}-tap_medium.webp" alt="" loading="lazy">'
+               f'</div>')
     promise = "".join(f"<li>{e(p)}</li>" for p in c["promise"])
     faq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in c["faq"])
     return head(c["title"], c["description"], canonical, prefix, c["lang"], c["lang"], alternates) + f"""<body>
@@ -236,6 +247,14 @@ def landing(c):
       <h2>{e(c['share_title'])}</h2>
       <p class="muted">{e(c['share_sub'])}</p>
       <div class="shots cards">{cards}</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>{e(c['widgets_title'])}</h2>
+      <p class="muted">{e(c['widgets_sub'])}</p>
+      {widgets}
     </div>
   </section>
 

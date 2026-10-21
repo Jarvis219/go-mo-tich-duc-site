@@ -100,6 +100,12 @@ section { padding: 70px 0; }
 .shots.cards img { border-radius: 22px; }
 .shots img { flex: 0 0 auto; width: 240px; border-radius: 30px; border: 1px solid var(--hairline); box-shadow: 0 14px 34px rgba(107, 68, 38, .14); scroll-snap-align: center; }
 
+.widgets { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin-top: 26px;
+  padding: 26px; border-radius: 34px; background: var(--paper-deep) url("img/bg_mist.webp") center / cover; }
+.widgets img { width: 100%; border-radius: 22px; box-shadow: 0 10px 26px rgba(43, 36, 32, .16); }
+.widgets .w-small { grid-row: 1; }
+.widgets .w-medium { grid-column: 1 / span 2; grid-row: 2; }
+.widgets .w-large { grid-column: 3 / span 2; grid-row: 1 / span 2; }
 .promise { text-align: center; }
 .promise ul { list-style: none; padding: 0; margin: 24px 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .promise li { padding: 10px 16px; border-radius: 999px; background: var(--jade-soft); color: #3f6a4c; font-size: 15px; }
@@ -132,6 +138,8 @@ footer nav { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 10px; }
   .hero .tagline { margin-inline: auto; }
   .cta, .pills { justify-content: center; }
   .grid3, .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .widgets { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 16px; gap: 12px; }
+  .widgets .w-large { grid-column: 1 / span 2; grid-row: 3; }
   section { padding: 50px 0; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -7,12 +7,12 @@ ART_DIR = the 1254 px generated originals, SHOTS_DIR = simulator screenshots
 """
 import os
 import pathlib
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 APP = pathlib.Path(os.environ.get("APP_DIR", ROOT.parent / "go-mo-tich-duc"))
 ART = pathlib.Path(os.environ.get("ART_DIR", pathlib.Path.home() / "Downloads/go_mo"))
-SHOTS = pathlib.Path(os.environ.get("SHOTS_DIR", ROOT / "raw-shots"))
+SHOTS = pathlib.Path(os.environ.get("SHOTS_DIR", ROOT / "raw-shots"))   # the StoreScreenshotTests output dir
 # Share cards rendered by the app's ShareCardRenderTests (TEST_RUNNER_SHARE_DIR).
 CARDS = pathlib.Path(os.environ.get("CARDS_DIR", ROOT / "raw-cards"))
 OUT = ROOT / "assets"
@@ -78,10 +78,13 @@ def main():
     webp(trim(art("mallet")).transpose(Image.FLIP_LEFT_RIGHT), OUT / "img/mallet_left.webp", 420)
     webp(art("bg_paper").convert("RGB"), OUT / "img/bg_paper.webp", 1400, quality=80)
     webp(art("bg_mist").convert("RGB"), OUT / "img/bg_mist.webp", 1400, quality=80)
-    for shot in ["home_vi", "home_en", "11_shop", "03_ledger", "14_quotes", "02_goal"]:
-        path = SHOTS / f"{shot}.png"
-        if path.exists():
-            webp(Image.open(path).convert("RGB"), OUT / f"shots/{shot}.webp", 900, quality=82)
+    # iPhone screenshots from the app's StoreScreenshotTests: <SHOTS>/iphone/<lang>-<n>-<name>.png
+    for path in sorted((SHOTS / "iphone").glob("*.png")):
+        lang, _, name = path.stem.split("-", 2)
+        webp(ImageOps.exif_transpose(Image.open(path)).convert("RGB"), OUT / f"shots/{lang}-{name}.webp", 900, quality=82)
+    # Widget renders from the app's WidgetRenderTests (docs/store/widgets in the app repo).
+    for path in sorted((APP / "docs/store/widgets").glob("*.png")):
+        webp(Image.open(path).convert("RGBA"), OUT / f"widgets/{path.stem}.webp", 720, quality=88)
     # <type>.<detail>_story_<lang>.png → cards/<type>_<lang>.webp
     for path in sorted(CARDS.glob("*_story_*.png")):
         kind, lang = path.stem.split(".")[0], path.stem.rsplit("_", 1)[1]
